@@ -1,0 +1,827 @@
+import './App.css';
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import logoImg from './img/img-logo.png';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+
+function App() {
+const [showModal, setShowModal] = useState(false);
+const [editar, setEditar] = useState(false);
+const [muestrasList, setMuestraList]=useState([]);
+const [CodigoMuestra,setCodigoMuestra]=useState('');
+const [Empresa,setEmpresa]=useState('');
+const [Categorias,setCategorias]=useState('');
+const [Municipio,setMunicipio]=useState('');
+const [Vereda,setVereda]=useState('');
+const [TecnicasDeHumedad,setTecnicasDeHumedad]=useState('');
+const [FechaRecepcion,setFechaRecepcion]= useState('');
+const [ContactoLaboratorio,setContactoLaboratorio]=useState('');
+const [Equipo,setEquipo]= useState('');
+const [Convenio,setConvenio]=useState('');
+const [PesoMuestra,setPesoMuestra]=useState('');
+const [SistemaDeCajones,setSistemaDeCajones]=useState('');
+const [DiaDeSecado,setDiasDeSecado]=useState('');
+const [Prevolteos,setPrevolteos]=useState('');
+const [TecnicasDeVolteo,setTecnicasDeVolteo]=useState('');
+const [PorcentajeDeFermentacion,setPorcentajeDeFermentacion]=useState('');
+const [DiasDeFermentacion,setDiasDeFermentacion]=useState('');
+const [HerramientasVolteo,setHerramientasVolteo]= useState('');
+const [EpocasCosechas,setEpocasCosechas]=useState('');
+const [Cordenadas,setCordenadas]=useState('');
+const [TecnicasDeSecado,setTecnicasDeSecado]=useState('');
+const [TipoDeAnalisis,setTipoDeAnalisis]=useState('');
+const [idmuestra,setIdmuestra] = useState('');
+
+useEffect(() =>{
+},[])
+
+const cerrarModal = () =>{
+setShowModal(false);
+LimpiarCampos();
+}
+const abrirModal = () =>{
+  setShowModal((prevShowModal)=> !prevShowModal)
+}
+
+const LimpiarCampos = () =>{
+  setCodigoMuestra('');
+  setEmpresa('');
+  setCategorias('');
+  setMunicipio('');
+  setVereda('');
+  setTecnicasDeHumedad('');
+  setFechaRecepcion('');
+  setContactoLaboratorio('');
+  setEquipo('');
+  setConvenio('');
+  setPesoMuestra('');
+  setSistemaDeCajones('');
+  setDiasDeSecado('');
+  setPrevolteos('')
+  setTecnicasDeVolteo('');
+  setPorcentajeDeFermentacion('');
+  setDiasDeFermentacion('');
+  setHerramientasVolteo('');
+  setEpocasCosechas('');
+  setCordenadas('');
+  setTecnicasDeSecado('');
+  setTipoDeAnalisis('');
+  setEditar(false)
+  setIdmuestra('');
+
+}
+const eliminarMuestras = (idmuestra) => {
+  Axios.delete(`http://localhost:3001/delete/${idmuestra}`)
+  .then(() => {
+      getMuestras();
+      Swal.fire({
+        title: 'Muestra eliminada',
+        text: 'La muestra ha sido eliminada correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#7b4812',
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      Swal.fire({
+        title: 'Error al eliminar',
+        text: 'No se pudo eliminar la muestra. Inténtelo nuevamente.',
+        icon: 'error',
+        confirmButtonColor: '#7b4812',
+      });
+    });
+};
+
+const getMuestras = () => {
+  Axios.get('http://localhost:3001/ConsultarM')
+    .then((response) => {
+      setMuestraList(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No se pudo obtener la lista de variedades!',
+        confirmButtonColor: '#7b4812',
+      });
+    });
+};
+
+const add = () => {
+  Axios.post('http://localhost:3001/create', {
+    CodigoMuestra: CodigoMuestra,
+    Empresa:Empresa,
+    Categorias:Categorias,
+    Municipio:Municipio,
+    Vereda:Vereda,
+    TecnicasDeHumedad:TecnicasDeHumedad,
+    FechaRecepcion:FechaRecepcion,
+    ContactoLaboratorio:ContactoLaboratorio,
+    Equipo:Equipo,
+    Convenio:Convenio,
+    PesoMuestra:PesoMuestra,
+    SistemaDeCajones:SistemaDeCajones,
+    DiaDeSecado:DiaDeSecado,
+    Prevolteos:Prevolteos,
+    TecnicasDeVolteo:TecnicasDeVolteo,
+    PorcentajeDeFermentacion:PorcentajeDeFermentacion,
+    DiasDeFermentacion:DiasDeFermentacion,
+    HerramientasVolteo:HerramientasVolteo,
+    EpocasCosechas:EpocasCosechas,
+    Cordenadas:Cordenadas,
+    TecnicasDeSecado:TecnicasDeSecado,
+    TipoDeAnalisis:TipoDeAnalisis,
+  })
+    .then(() => {
+      LimpiarCampos();
+      getMuestras();
+      Swal.fire({
+        icon: 'success',
+        title: 'Registrado con éxito',
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        footer: '<a href="">Why do I have this issue?</a>',
+      });
+    });
+};
+
+const update = () => {
+  Axios.put('http://localhost:3001/update', {
+    idmuestra:idmuestra,
+    CodigoMuestra: CodigoMuestra,
+    Empresa:Empresa,
+    Categorias:Categorias,
+    Municipio:Municipio,
+    Vereda:Vereda,
+    TecnicasDeHumedad:TecnicasDeHumedad,
+    FechaRecepcion:FechaRecepcion,
+    ContactoLaboratorio:ContactoLaboratorio,
+    Equipo:Equipo,
+    Convenio:Convenio,
+    PesoMuestra:PesoMuestra,
+    SistemaDeCajones:SistemaDeCajones,
+    DiaDeSecado:DiaDeSecado,
+    Prevolteos:Prevolteos,
+    TecnicasDeVolteo:TecnicasDeVolteo,
+    PorcentajeDeFermentacion:PorcentajeDeFermentacion,
+    DiasDeFermentacion:DiasDeFermentacion,
+    HerramientasVolteo:HerramientasVolteo,
+    EpocasCosechas:EpocasCosechas,
+    Cordenadas:Cordenadas,
+    TecnicasDeSecado:TecnicasDeSecado,
+    TipoDeAnalisis:TipoDeAnalisis,
+  })
+    .then(() => {
+      getMuestras();
+      LimpiarCampos();
+      Swal.fire({
+        title: '<strong>Actualización exitosa!</strong>',
+        html: `<i>El Codigo de muestra: <strong>${CodigoMuestra}</strong> fue actualizado con éxito!!</i>`,
+        icon: 'success',
+        timer: 5000,
+        confirmButtonColor: '#7b4812',
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No se logró actualizar el empleado!',
+        confirmButtonColor: '#7b4812',
+      });
+    });
+};
+const editarMuestras = (val) => {
+  setEditar(true);
+  abrirModal();
+  setCodigoMuestra(val.CodigoMuestra);
+  setEmpresa(val.Empresa);
+  setCategorias(val.Categorias);
+  setMunicipio(val.Municipio);
+  setContactoLaboratorio(val.ContactoLaboratorio);
+  setEquipo('');
+  setConvenio(val.Convenio);
+  setPesoMuestra(val.PesoMuestra);
+  setSistemaDeCajones(val.SistemaDeCajones);
+  setDiasDeSecado(val.DiaDeSecado);
+  setPrevolteos(val.Prevolteos)
+  setTecnicasDeVolteo(val.TecnicasDeVolteo);
+  setPorcentajeDeFermentacion(val.PorcentajeDeFermentacion);
+  setDiasDeFermentacion(val.DiaDeSecado);
+  setHerramientasVolteo(val.HerramientasVolteo);
+  setEpocasCosechas(val.EpocasCosechas);
+  setCordenadas(val.Cordenadas);
+  setTecnicasDeSecado(val.TecnicasDeSecado);
+  setTipoDeAnalisis(val.TipoDeAnalisis);
+  setIdmuestra(val.idmuestra)
+};
+
+const buscarMuestras = () =>{
+  Axios.get(`http://localhost:3001/buscar?CMuestra=${CodigoMuestra}`)
+  .then((response)=>{
+    setMuestraList(response.data);
+  })
+  .catch((error)=>{
+    console.log(error);
+    Swal.fire({
+      icon: 'error',
+      title:'Oops...',
+      text:'No se pudo realizar la búsqueda!',
+      confirmButtonColor:'#7b4812',
+    })
+  })
+}
+  return (
+    <div className="App">
+      <div className="container-fluid">
+        <div className='contenedor'>
+          {!showModal && (
+          <Button
+          className='btn-1 custom-btn'
+          variant='primary'
+          onClick={abrirModal}
+          style={{
+            width: "200px",
+            height: "74px",
+            padding: "0px 16px 0px 16px",
+            background: "#7b4812",
+            color: "#ffffff",
+            borderColor: "#7b4812",
+            borderWidth: "2px",
+            borderStyle: "solid",
+            borderRadius: "5px 5px 5px 5px",
+            fontFamily: "Source Sans 3",
+            fontWeight: "600",
+            fontSize: "15px",
+            textAlign: "center",
+          }}
+          >
+            Agregar Muestra
+          </Button>
+          )}
+          <Modal
+           style={{  maxHeight: '100vh' }}
+           size="lg"
+           aria-labelledby="example-modal-sizes-title-sm"
+           show={showModal}
+           onHide={abrirModal}
+           centered
+          >
+            <Modal.Header closeButton>
+              <img className='img-logo' src={logoImg} alt='Log-Empresa' />
+              <Modal.Title style={{color: '#7b4812'}}>Agregar nueva muestra</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{ overflowY: 'auto' ,height:'850px'}} >
+              <Form>
+              <Row>
+              <Col md={4}>
+                <Form.Group controlId='CodigoMuestra'>
+                  <Form.Label style={{ color: '#7b4812' }}>Codigo Muestra</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Codigo de Muestra'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={CodigoMuestra}
+                    onChange={(a)=> setCodigoMuestra(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='Empresa'>
+                <Form.Label style={{ color: '#7b4812' }}>Empresa</Form.Label>
+                <div className="input-group">
+                  <Form.Control
+                    type='text'
+                    placeholder='Busca La Empresa'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Empresa}
+                    onChange={(a)=>setEmpresa(a.target.value)}
+                  />
+                  <div className="input-group-append">
+                      <i className="fa-solid fa-magnifying-glass fa-beat"></i>
+                  </div>
+                </div>
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='Categorias'>
+                  <Form.Label style={{ color: '#7b4812' }}>Categorias</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Categorias}
+                    onChange={(a)=>setCategorias(a.target.value)}
+                    as='select'
+                    placeholder='categori'
+                  >
+                    <option value='categoria1'>Categoria 1</option>
+                    <option value='categoria2'>Categoría 2</option>
+                    <option value='categoria3'>Categoría 3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='Municipio'>
+                  <Form.Label style={{ color: '#7b4812' }}>Municipio</Form.Label>
+                  <div className="input-group">
+                  <Form.Control
+                    type='text'
+                    placeholder='Busca el municipio'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Municipio}
+                    onChange={(a)=>setMunicipio(a.target.value)}
+                  />
+                  <div className="input-group-append">
+                      <i className="fa-solid fa-magnifying-glass fa-beat"></i>
+                  </div>
+                </div>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='Verada'>
+                <Form.Label style={{ color: '#7b4812' }}>Vereda</Form.Label>
+                <div className="input-group">
+                  <Form.Control
+                    type='text'
+                    placeholder='Busca La Vereda'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Vereda}
+                    onChange={(a)=>setVereda(a.target.value)}
+                  />
+                  <div className="input-group-append">
+                      <i className="fa-solid fa-magnifying-glass fa-beat"></i>
+                  </div>
+                </div>
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='TecnicaHumedad'>
+                  <Form.Label style={{ color: '#7b4812' }}>Tecnicas de Humedad</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    placeholder='Tecnicas de Humedad'
+                    as='select'
+                    value={TecnicasDeHumedad}
+                    onChange={(a)=>setTecnicasDeHumedad(a.target.value)}
+                  >
+                    <option value='TecnicaDeHumedad1'>TecnicaDeHumedad1</option>
+                    <option value='TecnicaDeHumedad2'>TecnicaDeHumedad2</option>
+                    <option value='TecnicaDeHumedad3'>TecnicaDeHumedad3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='FechaRecepción'>
+                  <Form.Label style={{ color: '#7b4812' }}>Fecha recepción</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Fecha recepción'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={FechaRecepcion}
+                    onChange={(a)=>setFechaRecepcion(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='ContactoLaboratorio'>
+                <Form.Label style={{ color: '#7b4812' }}>Contacto de el laboratorio</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Contacto de el laboratorio'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={ContactoLaboratorio}
+                    onChange={(a)=>setContactoLaboratorio(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='Equipo?'>
+                  <Form.Label style={{ color: '#7b4812' }}>Equipo</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Equipo}
+                    onChange={(a)=>setEquipo(a.target.value)}
+                    as='select'
+                  >
+                    <option value='?'>?</option>
+                    <option value='?'>?</option>
+                    <option value='?'>?</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='convenio'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>convenio</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='agrega el convenio'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Convenio}
+                    onChange={(a)=>setConvenio(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='PesoMuestra'>
+                <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Peso de la muestra</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Peso de la muestra'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={PesoMuestra}
+                    onChange={(a)=>setPesoMuestra(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='Sistema de ?'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Sistema de Cajones</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={SistemaDeCajones}
+                    onChange={(a)=>setSistemaDeCajones(a.target.value)}
+                    placeholder='Sistema de Cajones'
+                    as='select'
+                  >
+                    <option value='?'>?</option>
+                    <option value='?'>?</option>
+                    <option value='?'>?</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='DiasDeSecado'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Dias de secado</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Dias de secado'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                  value={DiaDeSecado}
+                  onChange={(a)=>setDiasDeSecado(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='Prevolteos'>
+                <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Prevolteos</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agrega la cantidad de Prevolteos'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Prevolteos}
+                    onChange={(a)=>setPrevolteos(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='Tecnicas de volteo'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Tecnicas de volteo</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    placeholder='Tecnicas de volteo'
+                    as='select'
+                    value={TecnicasDeVolteo}
+                    onChange={(a)=>setTecnicasDeVolteo(a.target.value)}
+                  >
+                    <option value='TecnicasdeVolteo1'>TecnicasdeVolteo1</option>
+                    <option value='TecnicasdeVolteo2'>TecnicasdeVolteo2</option>
+                    <option value='TecnicasdeVolteo3'>TecnicasdeVolteo3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='PorcentageDeFermemtacion'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Porcentaje de fermentacion</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Porcentage de fermemtacion'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={PorcentajeDeFermentacion}
+                    onChange={(a)=>setPorcentajeDeFermentacion(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='DiasFermentado'>
+                <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Dias de fermentación</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agrega Dias de fermentación'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={DiasDeFermentacion}
+                    onChange={(a)=>setDiasDeFermentacion(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='HerramientasDeVolteo'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Herramientas de Volteo</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={HerramientasVolteo}
+                    onChange={(a)=>setHerramientasVolteo(a.target.value)}
+                    placeholder='Agregar Herramientas de Volteo'
+                    as='select'
+                  >
+                    <option value='HerramientoDeVolteo1'>HerramientoDeVolteo1</option>
+                    <option value='HerramientoDeVolteo2'>HerramientoDeVolteo2</option>
+                    <option value='HerramientoDeVolteo3'>HerramientoDeVolteo3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='EpocaDeCosechas'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Epocas de cosechas</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agraga Epocas De cosechas'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={EpocasCosechas}
+                    onChange={(a)=>setEpocasCosechas(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='Cordenadas'>
+                <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Cordenadas</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agrega Cordenadas'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Cordenadas}
+                    onChange={(a)=>setCordenadas(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+              <Col md={4}>
+                <Form.Group controlId='TecnicasDeSecado'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Tecnicas de secado</Form.Label>
+                  <Form.Control
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    placeholder='Agregar Tecnicas de secado'
+                    as='select'
+                    value={TecnicasDeSecado}
+                    onChange={(a)=>setTecnicasDeSecado(a.target.value)}
+                  >
+                    <option value='TecnicasdeSecado1'>TecnicasdeSecado1</option>
+                    <option value='TecnicasdeSecado2'>TecnicasdeSecado2</option>
+                    <option value='TecnicasdeSecado3'>TecnicasdeSecado3</option>
+                  </Form.Control>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group controlId='Prevolteo'>
+                  <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Prevolteos</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agrega prevolteos'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={Prevolteos}
+                    onChange={(a)=>setPrevolteos(a.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+              <Form.Group controlId='TipoDeAnalisis'>
+                <Form.Label style={{ color: '#7b4812',marginTop:'25px' }}>Tipo de Analisis</Form.Label>
+                  <Form.Control
+                    type='text'
+                    placeholder='Agrega Cordenadas'
+                    style={{
+                      width: '100%',
+                      outlineColor: '#7b4812',
+                      boxShadow: '0 0 5px #7b4812',
+                      border: 'solid 1px #7b4812',
+                    }}
+                    value={TipoDeAnalisis}
+                    onChange={(a)=>setTipoDeAnalisis(a.target.value)}
+                  />
+              </Form.Group>
+            </Col>
+            </Row>
+            <div className="form-group text-center">
+                  {editar === true ? (
+                    <div>
+                      <Button style={{ background: '#7b4812', border: '#7b4812', marginTop: '20px' }} onClick={update}>
+                        Actualizar
+                      </Button>
+                      <Button
+                        style={{ background: '#7b4812', border: 'gray', marginLeft: '10px', marginTop: '20px' }}
+                        onClick={cerrarModal}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button style={{ background: '#7b4812', border: '#7b4812', marginTop: '20px' }} variant="success" onClick={add}>
+                      Registrar
+                    </Button>
+                  )}
+                </div>
+              </Form>
+            </Modal.Body>
+          </Modal>
+          <div className="input-group mb-5 divB">
+            <input
+              style={{
+                width: '40px',
+                outlineColor: '#7b4812',
+                boxShadow: '0 0 4px #7b4812',
+                border: 'solid 1px #7b4812',
+              }}
+              type="text"
+              className="form-control custom-search-input"
+              placeholder="Buscar variedad de cacao por atributo"
+              aria-label="Buscar variedad de cacao por atributo"
+              aria-describedby="button-addon2"
+              onChange={(e)=> buscarMuestras(e.target.value)}
+            />
+            <button className="btn btn-outline-secondary" type="button" id="button-addon2">
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </div>
+        <h2 style={{ width: '1200px', marginLeft: '70px' }} className="titleEmpresas">
+          Muestras
+        </h2>
+        <table style={{ width: '1200px', marginLeft: '70px' }} className="table">
+          <thead>
+            <tr>
+              <th style={{ background: '#7b4812', color: 'white', width:'200px' }} scope="col">
+                Empresas
+              </th>
+              <th style={{ background: '#7b4812', color: 'white' ,width:'100px'}} scope="col">
+                Municipio
+              </th>
+              <th style={{ background: '#7b4812', color: 'white' }} scope="col">
+                Veredad
+              </th>
+              <th style={{ background: '#7b4812', color: 'white' ,}} scope="col">
+                Fechas recepción
+              </th>
+              <th style={{ background: '#7b4812', color: 'white' }} scope="col">
+                <p>Mas..</p>
+              </th>
+              <th  style={{ background: '#7b4812', color: 'white' }} scope="col">
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {muestrasList.map((val, index) => {
+              return (
+                <tr key={val.idmuestra || index}>
+                  <td>{val.Empresa}</td>
+                  <td>{val.Municipio}</td>
+                  <td>{val.Vereda}</td>
+                  <td>{val.FechaRecepcion}</td>
+                  <td> <button onClick={abrirModal}>Mas..</button> </td>
+                  <td>
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                      <button
+                        type="button"
+                        onClick={() => editarMuestras(val)}
+                        className="btn-editar btn-secondary"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => eliminarMuestras(val.idmuestra)}
+                        className="btn-eliminar btn-secondary"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+
+export default App;
